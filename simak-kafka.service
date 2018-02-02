@@ -1,0 +1,11 @@
+[Unit]
+Description=Integrasi Simak dan Kafka
+After=syslog.target
+
+[Service]
+User=root
+ExecStart=/var/lib/simak-kafka/simak-kafka.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
