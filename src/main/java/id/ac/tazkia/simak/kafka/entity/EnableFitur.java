@@ -12,7 +12,7 @@ public class EnableFitur {
     private Long id;
 
     @NotNull @NotEmpty
-    @Column(name = "mhsw_id")
+    @Column(name = "mhswid")
     private String mahasiswa;
 
     @NotNull @NotEmpty
