@@ -36,6 +36,7 @@ public class KafkaListenerService {
 
             enableFitur.setEnable(true);
             enableFiturDao.save(enableFitur);
+            LOGGER.info("Enable Fitur {} untuk nomor {}", FITUR_KRS, pembayaranTagihan.getNomorDebitur());
         } catch (Exception err) {
             LOGGER.error(err.getMessage(), err);
         }
