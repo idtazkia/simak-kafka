@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Entity @Data
 public class EnableFitur {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @NotNull @NotEmpty
     @Column(name = "mhsw_id")
