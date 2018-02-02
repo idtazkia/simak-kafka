@@ -1,0 +1,15 @@
+{
+  "nomorTagihan" : "2018013001000011",
+  "nomorDebitur" : "171105",
+  "namaDebitur" : "Siswa 006",
+  "keteranganTagihan" : "Tagihan Pendaftaran 005",
+  "tanggalTagihan" : "2018-01-30",
+  "tanggalJatuhTempo" : "2018-03-05",
+  "statusTagihan" : "NONAKTIF",
+  "nilaiTagihan" : 500005.00,
+  "nilaiPembayaran" : 500005,
+  "nilaiAkumulasiPembayaran" : 500005.00,
+  "bank" : "bnisy001",
+  "waktuPembayaran" : "2018-02-02 13:56:40",
+  "referensiPembayaran" : "250003"
+}
