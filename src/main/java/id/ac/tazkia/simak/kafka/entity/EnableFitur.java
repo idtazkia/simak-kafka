@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Entity @Data
+@Entity @Table(name = "enable_fitur") @Data
 public class EnableFitur {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
