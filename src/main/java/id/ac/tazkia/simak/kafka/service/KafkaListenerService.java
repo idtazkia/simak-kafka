@@ -18,15 +18,26 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service @Transactional
 public class KafkaListenerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaListenerService.class);
     private static final String FITUR_KRS = "krs";
+    private static final String FITUR_UJIAN = "ujian";
+    private static final String FITUR_NOTE = "note";
 
     @Value("${kode.semester}") private String kodeSemester;
     @Value("${kode.bipot.spp.tetap}") private Long kodeBipotSppTetap;
+    @Value("${kode.bipot.spp.variabel}") private Long kodeBipotSppVariabel;
     @Value("${bank.nama}") private String namaBank;
     @Value("${bank.rekening}") private String rekeningBank;
+
+    @Value("#{'${kode.tagihan.spp.tetap}'.split(',')}")
+    private List<String> kodeTagihanSppTetap;
+
+    @Value("#{'${kode.tagihan.spp.variabel}'.split(',')}")
+    private List<String> kodeTagihanSppVariabel;
 
     @Autowired private BipotMahasiswaDao bipotMahasiswaDao;
     @Autowired private EnableFiturDao enableFiturDao;
@@ -49,16 +60,26 @@ public class KafkaListenerService {
     }
 
     private void pembayaranMahasiswa(PembayaranTagihan pembayaranTagihan) {
+        Long kodeBipot = null;
+        if (kodeTagihanSppTetap.contains(pembayaranTagihan.getJenisTagihan())) {
+            kodeBipot = kodeBipotSppTetap;
+        } else if (kodeTagihanSppVariabel.contains(pembayaranTagihan.getJenisTagihan())) {
+            kodeBipot = kodeBipotSppVariabel;
+        } else {
+            LOGGER.info("Jenis tagihan {} belum diimplementasikan", pembayaranTagihan.getJenisTagihan());
+            return;
+        }
+
         BipotMahasiswa bipotMahasiswa = bipotMahasiswaDao.findByMahasiswaAndKodeBipotAndKodeSemester(
                 pembayaranTagihan.getNomorDebitur(),
-                kodeBipotSppTetap,
+                kodeBipot,
                 kodeSemester
         );
 
         if (bipotMahasiswa == null) {
             LOGGER.warn("BIPOT tidak ditemukan untuk mahasiswa {} semester {} bipot {}",
                     pembayaranTagihan.getNomorDebitur(),
-                    kodeSemester, kodeBipotSppTetap
+                    kodeSemester, kodeBipot
                     );
             return;
         }
@@ -77,22 +98,32 @@ public class KafkaListenerService {
         detail.setPembayaranMahasiswa(bayar);
         detail.setJumlah(pembayaranTagihan.getNilaiPembayaran().longValue());
         detail.setBipotMahasiswa(bipotMahasiswa.getId());
-        detail.setBipotNama(kodeBipotSppTetap);
+        detail.setBipotNama(kodeBipot);
         pembayaranMahasiswaDetailDao.save(detail);
 
         enableFitur(pembayaranTagihan);
     }
 
     private void enableFitur(PembayaranTagihan pembayaranTagihan) {
-        EnableFitur enableFitur = enableFiturDao.findByMahasiswaAndFitur(pembayaranTagihan.getNomorDebitur(), FITUR_KRS);
+        String fitur = null;
+        if (kodeTagihanSppTetap.contains(pembayaranTagihan.getJenisTagihan())) {
+            fitur = FITUR_KRS;
+        } else if (kodeTagihanSppVariabel.contains(pembayaranTagihan.getJenisTagihan())) {
+            fitur = FITUR_UJIAN;
+        } else {
+            LOGGER.info("Jenis tagihan {} belum diimplementasikan", pembayaranTagihan.getJenisTagihan());
+            return;
+        }
+
+        EnableFitur enableFitur = enableFiturDao.findByMahasiswaAndFitur(pembayaranTagihan.getNomorDebitur(), fitur);
         if (enableFitur == null) {
             enableFitur = new EnableFitur();
             enableFitur.setMahasiswa(pembayaranTagihan.getNomorDebitur());
-            enableFitur.setFitur(FITUR_KRS);
+            enableFitur.setFitur(fitur);
         }
 
         enableFitur.setEnable(true);
         enableFiturDao.save(enableFitur);
-        LOGGER.info("Enable Fitur {} untuk nomor {}", FITUR_KRS, pembayaranTagihan.getNomorDebitur());
+        LOGGER.info("Enable Fitur {} untuk nomor {}", fitur, pembayaranTagihan.getNomorDebitur());
     }
 }

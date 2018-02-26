@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PembayaranTagihan {
+    private String jenisTagihan;
     private String nomorTagihan;
     private String nomorDebitur;
     private String namaDebitur;
