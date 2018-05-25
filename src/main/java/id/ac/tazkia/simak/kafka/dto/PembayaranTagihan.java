@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+@Data
 public class PembayaranTagihan {
     private String jenisTagihan;
+    private String kodeBiaya;
     private String nomorTagihan;
     private String nomorDebitur;
     private String namaDebitur;
