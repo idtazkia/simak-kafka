@@ -3,6 +3,7 @@ package id.ac.tazkia.simak.kafka;
 import id.ac.tazkia.simak.kafka.dto.PembayaranTagihan;
 import id.ac.tazkia.simak.kafka.service.KafkaListenerService;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class ImportPembayaranTests {
     @Value("${bank.nama}") private String namaBank;
 
 
-    @Test
+    @Test @Ignore
     public void testImportCsvPembayaran() throws Exception {
         Assert.assertNotNull(pembayaranCsv);
         BufferedReader reader = new BufferedReader(new InputStreamReader(pembayaranCsv.getInputStream()));
