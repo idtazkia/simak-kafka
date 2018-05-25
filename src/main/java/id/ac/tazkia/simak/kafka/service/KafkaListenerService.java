@@ -18,6 +18,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service @Transactional
@@ -59,7 +62,7 @@ public class KafkaListenerService {
         }
     }
 
-    private void pembayaranMahasiswa(PembayaranTagihan pembayaranTagihan) {
+    public void pembayaranMahasiswa(PembayaranTagihan pembayaranTagihan) {
         Long kodeBipot = null;
         if (kodeTagihanSppTetap.contains(pembayaranTagihan.getJenisTagihan())) {
             kodeBipot = kodeBipotSppTetap;
@@ -86,6 +89,8 @@ public class KafkaListenerService {
 
         LOGGER.info("Memproses pembayaran {} untuk mahasiswa {} - {} ", pembayaranTagihan.getJenisTagihan(), pembayaranTagihan.getNomorDebitur(), pembayaranTagihan.getNamaDebitur());
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         PembayaranMahasiswa bayar = new PembayaranMahasiswa();
         bayar.setBank(namaBank);
         bayar.setJumlah(pembayaranTagihan.getNilaiPembayaran().longValue());
@@ -94,6 +99,16 @@ public class KafkaListenerService {
         bayar.setMahasiswa(pembayaranTagihan.getNomorDebitur());
         bayar.setRekening(rekeningBank);
         bayar.setTahun(kodeSemester);
+        Date waktuPembayaran = new Date();
+        try {
+            waktuPembayaran = formatter.parse(pembayaranTagihan.getWaktuPembayaran());
+
+        } catch (ParseException err) {
+            LOGGER.info("Invalid date format "+pembayaranTagihan.getWaktuPembayaran()+", use current date");
+        }
+
+        bayar.setTanggal(waktuPembayaran);
+        bayar.setTanggalBuat(waktuPembayaran);
         pembayaranMahasiswaDao.save(bayar);
 
         PembayaranMahasiswaDetail detail = new PembayaranMahasiswaDetail();
@@ -101,6 +116,7 @@ public class KafkaListenerService {
         detail.setJumlah(pembayaranTagihan.getNilaiPembayaran().longValue());
         detail.setBipotMahasiswa(bipotMahasiswa.getId());
         detail.setBipotNama(kodeBipot);
+        detail.setTanggalBuat(waktuPembayaran);
         pembayaranMahasiswaDetailDao.save(detail);
 
         enableFitur(pembayaranTagihan);
