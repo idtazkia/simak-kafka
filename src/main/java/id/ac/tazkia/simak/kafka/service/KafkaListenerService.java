@@ -84,6 +84,8 @@ public class KafkaListenerService {
             return;
         }
 
+        LOGGER.info("Memproses pembayaran {} untuk mahasiswa {} - {} ", pembayaranTagihan.getJenisTagihan(), pembayaranTagihan.getNomorDebitur(), pembayaranTagihan.getNamaDebitur());
+
         PembayaranMahasiswa bayar = new PembayaranMahasiswa();
         bayar.setBank(namaBank);
         bayar.setJumlah(pembayaranTagihan.getNilaiPembayaran().longValue());
