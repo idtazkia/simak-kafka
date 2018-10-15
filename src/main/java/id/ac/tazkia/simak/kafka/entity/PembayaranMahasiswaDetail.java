@@ -1,6 +1,7 @@
 package id.ac.tazkia.simak.kafka.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +10,8 @@ import java.util.Date;
 public class PembayaranMahasiswaDetail {
 
     @Id @Column(name = "BayarMhsw2ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
     private Long id;
 
     @Column(name = "BayarMhsw2Ref")
