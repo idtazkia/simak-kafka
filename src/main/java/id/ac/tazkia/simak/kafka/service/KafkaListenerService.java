@@ -31,6 +31,7 @@ public class KafkaListenerService {
     private static final String FITUR_NOTE = "note";
 
     @Value("${kode.semester}") private String kodeSemester;
+    @Value("${kode.bipot.asrama}") private Long kodeBipotAsrama;
     @Value("${kode.bipot.spp.tetap}") private Long kodeBipotSppTetap;
     @Value("${kode.bipot.spp.variabel}") private Long kodeBipotSppVariabel;
     @Value("${bank.nama}") private String namaBank;
@@ -68,6 +69,8 @@ public class KafkaListenerService {
             kodeBipot = kodeBipotSppTetap;
         } else if (kodeTagihanSppVariabel.contains(pembayaranTagihan.getJenisTagihan())) {
             kodeBipot = kodeBipotSppVariabel;
+        } else if(kodeBipotAsrama.equals(pembayaranTagihan.getJenisTagihan())) {
+            kodeBipot = kodeBipotAsrama;
         } else {
             LOGGER.info("Jenis tagihan {} belum diimplementasikan", pembayaranTagihan.getJenisTagihan());
             return;
@@ -129,7 +132,7 @@ public class KafkaListenerService {
         } else if (kodeTagihanSppVariabel.contains(pembayaranTagihan.getJenisTagihan())) {
             fitur = FITUR_UJIAN;
         } else {
-            LOGGER.info("Jenis tagihan {} belum diimplementasikan", pembayaranTagihan.getJenisTagihan());
+            LOGGER.info("Jenis tagihan {} tidak berkaitan dengan fitur", pembayaranTagihan.getJenisTagihan());
             return;
         }
 
