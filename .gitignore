@@ -3,3 +3,9 @@
 .idea
 
 target
+
+.classpath
+.factorypath
+.gitignore.swp
+.project
+.settings
