@@ -50,7 +50,7 @@ public class KafkaListenerService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "${kafka.topic.tagihan.payment}", group = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka.topic.tagihan.payment}", groupId = "${spring.kafka.consumer.group-id}")
     public void handlePayment(String message) {
         try {
             PembayaranTagihan pembayaranTagihan = objectMapper.readValue(message, PembayaranTagihan.class);
