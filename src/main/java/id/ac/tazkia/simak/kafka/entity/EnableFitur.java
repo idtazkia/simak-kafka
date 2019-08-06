@@ -20,6 +20,9 @@ public class EnableFitur {
     @NotBlank
     private String fitur;
 
+    @NotBlank
+    private String tahunId;
+
     @NotNull
     private Boolean enable;
 }

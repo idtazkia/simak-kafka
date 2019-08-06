@@ -136,11 +136,12 @@ public class KafkaListenerService {
             return;
         }
 
-        EnableFitur enableFitur = enableFiturDao.findByMahasiswaAndFitur(pembayaranTagihan.getNomorDebitur(), fitur);
+        EnableFitur enableFitur = enableFiturDao.findByMahasiswaAndFiturAndTahunId(pembayaranTagihan.getNomorDebitur(), fitur, kodeSemester);
         if (enableFitur == null) {
             enableFitur = new EnableFitur();
             enableFitur.setMahasiswa(pembayaranTagihan.getNomorDebitur());
             enableFitur.setFitur(fitur);
+            enableFitur.setTahunId(kodeSemester);
         }
 
         enableFitur.setEnable(true);
