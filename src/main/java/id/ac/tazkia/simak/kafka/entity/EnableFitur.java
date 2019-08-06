@@ -21,6 +21,7 @@ public class EnableFitur {
     private String fitur;
 
     @NotBlank
+    @Column(name = "tahun_id")
     private String tahunId;
 
     @NotNull
